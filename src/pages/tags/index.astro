@@ -1,0 +1,9 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+const posts = await getCollection('posts');
+const tags = [...new Set(posts.flatMap(p => p.data.tags))].sort();
+---
+<Base title="태그"><section class="page-heading"><div class="eyebrow">EXPLORE BY TOPIC</div><h1>이어지는 주제들.</h1><p>관심 있는 주제부터 읽어보세요.</p></section>
+  <div class="tag-grid">{tags.map(tag => <a href={`/tags/${encodeURIComponent(tag)}/`}><span>{tag}</span><span>{posts.filter(p => p.data.tags.includes(tag)).length} ↗</span></a>)}</div>
+</Base>

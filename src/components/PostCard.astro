@@ -1,0 +1,14 @@
+---
+const { post, index = 0 } = Astro.props;
+const date = post.data.publishedAt.toISOString().slice(0, 10);
+---
+<article class="post-card">
+  <div class="post-number">{String(index + 1).padStart(2, '0')}</div>
+  <div>
+    <div class="post-meta"><time datetime={date}>{date.replaceAll('-', '.')}</time><span>TECHNICAL NOTE</span></div>
+    <h2><a href={`/posts/${post.data.slug}/`}>{post.data.title}</a></h2>
+    <p>{post.data.description}</p>
+    <div class="tags">{post.data.tags.map((tag: string) => <a href={`/tags/${encodeURIComponent(tag)}/`}>{tag}</a>)}</div>
+  </div>
+  <a class="arrow" href={`/posts/${post.data.slug}/`} aria-label={`${post.data.title} 읽기`}>↗</a>
+</article>

@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+const posts = (await getCollection('posts')).sort((a,b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+---
+<Base>
+  <section class="hero">
+    <div class="eyebrow"><span class="dot"></span> DEVELOPER'S FIELD NOTES</div>
+    <h1>코드에서<br /><span>배우는 것들.</span></h1>
+    <p>문제의 답을 찾는 데서 한 걸음 더.<br />왜 동작하는지 이해하고, 작은 예제로 기록합니다.</p>
+    <div class="hero-line"><span>원리 · 실험 · 기록</span><span>한국어 기술 노트</span></div>
+  </section>
+  <section aria-label="최근 글">
+    <div class="section-label"><h2>최근 기록</h2><span>{String(posts.length).padStart(2,'0')} NOTES</span></div>
+    {posts.map((post, index) => <PostCard post={post} index={index} />)}
+  </section>
+</Base>

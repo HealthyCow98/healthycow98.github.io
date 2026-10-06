@@ -1,0 +1,46 @@
+---
+import '../styles/global.css';
+const { title = '코드에서 배우는 것들', description = '원리를 이해하고, 작은 예제로 확인하는 기술 기록.' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="기술 기록 RSS" href="/rss.xml" />
+    <title>{title} · healthycow98</title>
+    <script is:inline>
+      try { document.documentElement.dataset.theme = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch {}
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+    <header class="header wrap">
+      <a class="brand" href="/" aria-label="홈"><span class="mark">h.</span> healthycow98<span class="brand-label"> / notes</span></a>
+      <nav aria-label="주 메뉴">
+        <a href="/tags/" aria-current={Astro.url.pathname.startsWith('/tags') ? 'page' : undefined}>태그</a>
+        <a href="/search/" aria-current={Astro.url.pathname.startsWith('/search') ? 'page' : undefined}>검색</a>
+        <a href="/about/" aria-current={Astro.url.pathname.startsWith('/about') ? 'page' : undefined}>소개</a>
+        <button id="theme-toggle" type="button" aria-label="어두운 테마로 전환">◐</button>
+      </nav>
+    </header>
+    <main id="main" class="wrap"><slot /></main>
+    <footer class="wrap footer"><span>작게 실험하고, 오래 이해하기.</span><a href="/rss.xml">RSS ↗</a></footer>
+    <script>
+      const button = document.querySelector<HTMLButtonElement>('#theme-toggle');
+      function label() { button?.setAttribute('aria-label', document.documentElement.dataset.theme === 'dark' ? '밝은 테마로 전환' : '어두운 테마로 전환'); }
+      label();
+      button?.addEventListener('click', () => {
+        const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = theme;
+        try { localStorage.setItem('theme', theme); } catch {}
+        label();
+      });
+    </script>
+  </body>
+</html>

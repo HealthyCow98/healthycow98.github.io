@@ -1,0 +1,21 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+export async function getStaticPaths() {
+  return (await getCollection('posts')).map(post => ({ params: { slug: post.data.slug }, props: { post } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const date = post.data.publishedAt.toISOString().slice(0,10);
+---
+<Base title={post.data.title} description={post.data.description}>
+  <article class="article">
+    <a class="back" href="/">← 모든 기록</a>
+    <header class="article-header">
+      <time class="eyebrow" datetime={date}>{date}</time>
+      <h1>{post.data.title}</h1><p>{post.data.description}</p>
+      <div class="tags">{post.data.tags.map((tag: string) => <a href={`/tags/${encodeURIComponent(tag)}/`}>{tag}</a>)}</div>
+    </header>
+    <div class="prose"><Content /></div>
+  </article>
+</Base>
